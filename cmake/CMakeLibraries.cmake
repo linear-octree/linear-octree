@@ -1,5 +1,5 @@
-# ---  L I B R A R I E S  --- #
-# --------------------------- #
+# ---  LIBRARIES  --- #
+# ------------------- #
 
 # Add module directory to the include path.
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/cmake/modules")

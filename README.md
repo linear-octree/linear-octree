@@ -67,11 +67,34 @@ The project includes installation scripts in the `scripts/` directory:
 
 ### Compilation
 
-In the project directory, just execute
-  ```bash
-  cmake -B build -DCMAKE_BUILD_TYPE=Release .
-  cmake --build build
-  ```
+#### Standard CPU Build (without CUDA)
+
+In the project directory, just execute:
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release .
+cmake --build build
+```
+
+This creates the executable at `build/octrees-benchmark`.
+
+#### CUDA GPU Acceleration Build
+
+##### Prerequisites
+
+This project requires CUDA 12.5+ and a compatible C++ compiler. The recommended approach is using **conda/micromamba** to manage the build environment.
+
+**Step 1:** Create a conda environment with CUDA and dependencies
+```bash
+# Using conda
+conda create -n cuda-build -c conda-forge gcc=12 gxx=12 cmake ninja cuda-toolkit=12.5 -y
+conda activate cuda-build
+```
+
+**Step 2:** Build with CUDA support
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DWITH_CUDA=ON .
+cmake --build build
+```
 
 This creates the executable at `build/octrees-benchmark`.
 
