@@ -21,7 +21,7 @@
 #include <fstream>
 #include <optional>
 #include <lasreader.hpp>
-#include "benchmarking/time_watcher.hpp"
+#include "time_watcher.hpp"
 #include "geometry/point.hpp"
 #include "geometry/point_containers.hpp"
 #include "geometry/point_metadata.hpp"
