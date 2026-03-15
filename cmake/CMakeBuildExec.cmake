@@ -26,13 +26,18 @@ macro(link_core_dependencies target_name)
     endif()
 endmacro()
 
-# Build core libraries (benchmarking-dependent sources excluded)
-# Note: papi_events.cpp, time_watcher.cpp, and main.cpp moved to octrees-benchmark-suite
-add_library(${PROJECT_NAME}_static STATIC ${lib_sources})
+# Compile sources once using Object Library to avoid duplication
+# This is more efficient than compiling the same sources for static and shared libraries
+add_library(${PROJECT_NAME}_objects OBJECT ${lib_sources})
+target_include_directories(${PROJECT_NAME}_objects PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+link_core_dependencies(${PROJECT_NAME}_objects)
+
+# Static library (uses pre-compiled objects)
+add_library(${PROJECT_NAME}_static STATIC $<TARGET_OBJECTS:${PROJECT_NAME}_objects>)
 link_core_dependencies(${PROJECT_NAME}_static)
 
-# Shared library
-add_library(${PROJECT_NAME}_shared SHARED ${lib_sources})
+# Shared library (uses pre-compiled objects)
+add_library(${PROJECT_NAME}_shared SHARED $<TARGET_OBJECTS:${PROJECT_NAME}_objects>)
 link_core_dependencies(${PROJECT_NAME}_shared)
 
 # Set Link Time Optimization (LTO)

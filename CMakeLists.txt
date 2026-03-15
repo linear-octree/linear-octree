@@ -35,7 +35,7 @@ include(cmake/CMakeBuildExec.cmake)
 message("Project built!\n\n")
 
 # Tests
-option(BUILD_TESTS "Build unit tests (download GoogleTest)" ON)
+option(BUILD_TESTS "Build unit tests (download GoogleTest)" OFF)
 if(BUILD_TESTS)
     include(CTest)
     enable_testing()
