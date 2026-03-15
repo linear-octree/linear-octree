@@ -40,6 +40,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto=auto")
 # ---  I N S T A L L A T I O N  --- #
 # ---------------------------------- #
 
+# Set default installation prefix to $HOME/.local
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/.local" CACHE PATH "Installation prefix" FORCE)
+endif()
+
 # Install libraries
 install(TARGETS ${PROJECT_NAME}_static ${PROJECT_NAME}_shared
     ARCHIVE DESTINATION lib
@@ -61,12 +66,12 @@ set(CMAKE_INSTALL_INCLUDEDIR "include" CACHE PATH "Include directory")
 set(CMAKE_INSTALL_LIBDIR "lib" CACHE PATH "Library directory")
 
 configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/OctreesBenchmarkConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/OctreesBenchmarkConfig.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/LinearOctreeConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/LinearOctreeConfig.cmake
     INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
     PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR
 )
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/OctreesBenchmarkConfig.cmake
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/LinearOctreeConfig.cmake
     DESTINATION lib/cmake/${PROJECT_NAME}
 )
