@@ -3,7 +3,6 @@
 #include <cassert>
 #include <concepts>
 #include <cstddef>
-#include <Eigen/Core>
 #include <iostream>
 #include <memory>
 #include <variant>
@@ -66,12 +65,45 @@ public:
 
 
 
+// Aligned allocator
+template <typename T, size_t Alignment = 64>
+class aligned_allocator {
+public:
+    using value_type = T;
+    using pointer = T*;
+    using const_pointer = const T*;
+    using reference = T&;
+    using const_reference = const T&;
+    using size_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
+
+    template <typename U>
+    struct rebind { using other = aligned_allocator<U, Alignment>; };
+
+    T* allocate(std::size_t n) {
+        if (n == 0) return nullptr;
+        void* ptr = std::aligned_alloc(Alignment, n * sizeof(T));
+        if (!ptr) throw std::bad_alloc();
+        return static_cast<T*>(ptr);
+    }
+
+    void deallocate(T* p, std::size_t) {
+        std::free(p);
+    }
+
+    template <typename U, size_t OtherAlignment>
+    bool operator==(const aligned_allocator<U, OtherAlignment>&) const { return true; }
+
+    template <typename U, size_t OtherAlignment>
+    bool operator!=(const aligned_allocator<U, OtherAlignment>&) const { return false; }
+};
+
 // -----------------------------------------------------
 // SoA container (SIMD)
 // -----------------------------------------------------
 class PointsSoA {
-    std::vector<double, Eigen::aligned_allocator<double>> xs, ys, zs;
-    std::vector<size_t, Eigen::aligned_allocator<size_t>> ids;
+    std::vector<double, aligned_allocator<double>> xs, ys, zs;
+    std::vector<size_t, aligned_allocator<size_t>> ids;
 public:
     PointsSoA(size_t n = 0) : xs(n), ys(n), zs(n), ids(n) {}
 

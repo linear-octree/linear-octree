@@ -36,10 +36,13 @@ message("Project built!\n\n")
 
 # Tests
 option(BUILD_TESTS "Build unit tests (download GoogleTest)" OFF)
+
 if(BUILD_TESTS)
     include(CTest)
     enable_testing()
     add_subdirectory(tests)
+else()  
+    message("Unit tests disabled (use -DBUILD_TESTS=ON to enable)")
 endif()
 
 # Examples

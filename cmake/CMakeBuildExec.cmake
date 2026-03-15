@@ -7,12 +7,6 @@ macro(link_core_dependencies target_name)
         target_link_libraries(${target_name} PUBLIC OpenMP::OpenMP_CXX)
     endif ()
 
-    if (TARGET Eigen3::Eigen)
-        target_link_libraries(${target_name} PUBLIC Eigen3::Eigen)
-    else ()
-        target_link_libraries(${target_name} PUBLIC ${EIGEN_LIBRARIES})
-    endif ()
-
     target_link_libraries(${target_name} PUBLIC ${LASLIB_LIBRARIES})
     
     # CUDA (only if CUDA is enabled)
