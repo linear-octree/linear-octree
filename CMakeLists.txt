@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
-project(linear-octree LANGUAGES C CXX)
+project(linoctree LANGUAGES C CXX)
 
 # CUDA support option
 option(WITH_CUDA "Enable CUDA support" OFF)

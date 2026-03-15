@@ -66,12 +66,12 @@ set(CMAKE_INSTALL_INCLUDEDIR "include" CACHE PATH "Include directory")
 set(CMAKE_INSTALL_LIBDIR "lib" CACHE PATH "Library directory")
 
 configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/LinearOctreeConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/LinearOctreeConfig.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
     PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR
 )
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/LinearOctreeConfig.cmake
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     DESTINATION lib/cmake/${PROJECT_NAME}
 )

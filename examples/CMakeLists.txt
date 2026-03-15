@@ -1,2 +1,2 @@
 add_executable(example example.cpp)
-target_link_libraries(example PUBLIC linear-octree_shared)
+target_link_libraries(example PUBLIC ${PROJECT_NAME}_shared)
