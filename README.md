@@ -46,16 +46,15 @@ The library requires only **3 core dependencies**:
 - **Eigen3** (linear algebra)
 - **LASlib** (LAS file I/O)
 
-**Install system packages:**
-```bash
-# Ubuntu/Debian
-sudo apt-get install cmake libomp-dev libeigen3-dev
-```
-
 **Build and install LASlib:**
 ```bash
 bash scripts/install_laslib.sh
 ```
+**Build and install Eigen3:**
+```bash 
+bash scripts/install_eigen3.sh
+```
+
 
 ### Building the Library
 

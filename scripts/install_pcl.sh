@@ -3,10 +3,11 @@
 # Exit on error
 set -e
 
-# Get the path of the script
+# Get the path of this script
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 # Libs prefix
-LIB_PREFIX="$(dirname "$(readlink -f "$0")")/../lib"
+LIB_PREFIX="${SCRIPT_DIR}/../lib"
 
 # Get absolute path of LIB_PREFIX
 LIB_PREFIX="$(readlink -f "${LIB_PREFIX}")"
@@ -34,13 +35,7 @@ unzip eigen-3.4.0.zip
 mv eigen-3.4.0 eigen3_source
 
 # Install Eigen3
-mkdir -p eigen3_source/build
-cd eigen3_source/build
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${EIGEN3_PREFIX} ..
-make install -j
-cd ../..
-rm -rf eigen3_source
-rm eigen-3.4.0.zip
+bash "${SCRIPT_DIR}/install_eigen3.sh"
 
 # Build FLANN from source
 git clone https://github.com/flann-lib/flann ./flann_source
