@@ -29,12 +29,7 @@ cd "${BOOST_DIR}"
 ./b2 install -j 4
 cd ..
 
-#  Build Eigen3 from source
-wget -c https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
-unzip eigen-3.4.0.zip
-mv eigen-3.4.0 eigen3_source
-
-# Install Eigen3
+# Install Eigen3 (required by PCL)
 bash "${SCRIPT_DIR}/install_eigen3.sh"
 
 # Build FLANN from source
