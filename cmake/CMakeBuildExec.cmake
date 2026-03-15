@@ -1,16 +1,10 @@
 # ---  B U I L D I N G  --- #
 # ------------------------- #
 
-# Define a macro to link libraries to a target
-macro(link_project_dependencies target_name)
+# Define a macro to link core library dependencies (no benchmarking deps)
+macro(link_core_dependencies target_name)
     if (TARGET OpenMP::OpenMP_CXX)
         target_link_libraries(${target_name} PUBLIC OpenMP::OpenMP_CXX)
-    endif ()
-
-    if (TARGET armadillo::armadillo)
-        target_link_libraries(${target_name} PUBLIC armadillo::armadillo)
-    else ()
-        target_link_libraries(${target_name} PUBLIC ${ARMADILLO_LIBRARIES})
     endif ()
 
     if (TARGET Eigen3::Eigen)
@@ -20,26 +14,6 @@ macro(link_project_dependencies target_name)
     endif ()
 
     target_link_libraries(${target_name} PUBLIC ${LASLIB_LIBRARIES})
-
-    if (TARGET PCL::PCL)
-        target_compile_definitions(${target_name} PUBLIC HAVE_PCL)
-
-        foreach (lib ${PCL_LIBRARIES})
-            target_link_libraries(${target_name} PUBLIC ${lib})
-        endforeach ()
-    endif ()
-
-    if (TARGET Papi::Papi)
-        target_link_libraries(${target_name} PUBLIC Papi::Papi)
-    else ()
-        target_link_libraries(${target_name} PUBLIC ${PAPI_LIBRARIES})
-    endif ()
-
-    # PicoTree
-    if (TARGET pico_tree)
-        target_compile_definitions(${target_name} PUBLIC HAVE_PICOTREE)
-        target_link_libraries(${target_name} PUBLIC pico_tree)
-    endif()
     
     # CUDA (only if CUDA is enabled)
     if(WITH_CUDA)
@@ -52,17 +26,48 @@ macro(link_project_dependencies target_name)
     endif()
 endmacro()
 
-# Static library
+# Build core libraries (benchmarking-dependent sources excluded)
+# Note: papi_events.cpp, time_watcher.cpp, and main.cpp moved to octrees-benchmark-suite
 add_library(${PROJECT_NAME}_static STATIC ${lib_sources})
-link_project_dependencies(${PROJECT_NAME}_static)
+link_core_dependencies(${PROJECT_NAME}_static)
 
 # Shared library
 add_library(${PROJECT_NAME}_shared SHARED ${lib_sources})
-link_project_dependencies(${PROJECT_NAME}_shared)
-
-# Executable
-add_executable(${PROJECT_NAME} ${sources})
-link_project_dependencies(${PROJECT_NAME})
+link_core_dependencies(${PROJECT_NAME}_shared)
 
 # Set Link Time Optimization (LTO)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto=auto")
+
+# ---  I N S T A L L A T I O N  --- #
+# ---------------------------------- #
+
+# Install libraries
+install(TARGETS ${PROJECT_NAME}_static ${PROJECT_NAME}_shared
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+)
+
+# Install headers preserving directory structure
+install(DIRECTORY inc/
+    DESTINATION include/${PROJECT_NAME}
+    FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
+)
+
+# Generate and install CMake config file for find_package()
+include(CMakePackageConfigHelpers)
+
+# Define standard install directories
+set(CMAKE_INSTALL_INCLUDEDIR "include" CACHE PATH "Include directory")
+set(CMAKE_INSTALL_LIBDIR "lib" CACHE PATH "Library directory")
+
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/OctreesBenchmarkConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/OctreesBenchmarkConfig.cmake
+    INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
+    PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR
+)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/OctreesBenchmarkConfig.cmake
+    DESTINATION lib/cmake/${PROJECT_NAME}
+)

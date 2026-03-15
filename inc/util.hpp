@@ -22,7 +22,6 @@
 #include <iomanip>
 #include <numbers>
 #include <numeric>
-#include <papi.h>
 
 #include "geometry/point.hpp"
 #include "geometry/point_containers.hpp"

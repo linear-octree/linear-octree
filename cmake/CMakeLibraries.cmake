@@ -41,41 +41,6 @@ else ()
     message(SEND_ERROR "Could not find LASLIB")
 endif ()
 
-# Picotree
-find_package(Picotree QUIET)
-if (${PICOTREE_FOUND})
-    include_directories(${PICOTREE_INCLUDE_DIRS})
-    message(STATUS "Picotree include: ${PICOTREE_INCLUDE_DIRS}")
-else ()
-    message(STATUS "Could not find Picotree, building without Picotree support")
-endif ()
-
-
-# Hint Boost so PCL's own config can find the locally built Boost.
-set(BOOST_ROOT "${PROJECT_SOURCE_DIR}/lib/boost")
-set(Boost_ROOT "${PROJECT_SOURCE_DIR}/lib/boost")
-set(Boost_NO_SYSTEM_PATHS ON)
-
-# Include Boost
-set(BOOST_INCLUDE_DIRS "${BOOST_ROOT}/include")
-include_directories(${BOOST_INCLUDE_DIRS})
-
-# PCL (PointCloudLibrary)
-find_package(PCL QUIET)
-if (${PCL_FOUND})
-    include_directories(${PCL_INCLUDE_DIRS})
-    message(STATUS "PCL include: ${PCL_INCLUDE_DIRS}")
-    message(STATUS "PCL libraries: ${PCL_LIBRARIES}")
-else ()
-    message(STATUS "Could not find PCL, building without PCL support")
-endif ()
-
-# PAPI
-find_package(Papi REQUIRED)
-if (${PAPI_FOUND})
-    include_directories(${PAPI_INCLUDE_DIRS})
-    message(STATUS "Papi include: ${PAPI_INCLUDE_DIRS}")
-    message(STATUS "Papi libraries: ${PAPI_LIBRARIES}")
-else ()
-    message(SEND_ERROR "Could not find Papi")
-endif ()
+# Note: PAPI, Picotree, and PCL are benchmarking-only dependencies
+# They are configured in octrees-benchmark-suite instead
+message(STATUS "Library configuration: Core dependencies only (OpenMP, Eigen3, LASlib)")
