@@ -5,8 +5,8 @@
 #include <immintrin.h>
 #include <optional>
 
-#include "benchmarking/encoding_log.hpp"
-#include "benchmarking/time_watcher.hpp"
+#include "../encoding_log.hpp"
+#include "time_watcher.hpp"
 #include "geometry/box.hpp"
 #include "geometry/point.hpp"
 #include "geometry/point_metadata.hpp"

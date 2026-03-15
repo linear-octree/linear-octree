@@ -5,8 +5,8 @@
 #include <fstream>
 #include <unordered_map>
 #include <filesystem>
-#include "benchmarking/build_log.hpp"
-#include "benchmarking/time_watcher.hpp"
+#include "build_log.hpp"
+#include "time_watcher.hpp"
 #include "encoding/no_encoding.hpp"
 #include "encoding/point_encoder.hpp"
 #include "geometry/box.hpp"

@@ -6,7 +6,7 @@
 #include <memory>
 #include <sstream>
 
-#include "benchmarking/time_watcher.hpp"
+#include "../inc/time_watcher.hpp"
 
 // *** PUBLIC METHODS *** //
 // ********************** //

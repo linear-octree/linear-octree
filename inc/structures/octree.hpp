@@ -12,7 +12,7 @@
 #include <queue>
 #include <vector>
 #include <optional>
-#include "benchmarking/build_log.hpp"
+#include "build_log.hpp"
 #include "geometry/point_metadata.hpp"
 #include "geometry/point_containers.hpp"
 #include "kernels/kernel_factory.hpp"
