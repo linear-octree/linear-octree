@@ -1,4 +1,4 @@
-# octrees-benchmark
+# LinearOctree
 
 ## Background
 
@@ -37,133 +37,100 @@ Viñambres, P. D., Yermo, M., Alcaraz, S. R., Lorenzo, O. G., Rivera, F. F., & C
 
 ## Installation
 
-### Dependencies
+### Core Dependencies (Required)
 
-Install system-level dependencies and build required libraries using the provided installation scripts:
+The library requires only **3 core dependencies**:
 
-**Build and install libraries:**
-The project includes installation scripts in the `scripts/` directory:
+- **CMake** 3.14+
+- **OpenMP** (for parallelization)
+- **Eigen3** (linear algebra)
+- **LASlib** (LAS file I/O)
 
-- **LASlib** (required):
-  ```bash
-  bash scripts/install_laslib.sh
-  ```
+**Install system packages:**
+```bash
+# Ubuntu/Debian
+sudo apt-get install cmake libomp-dev libeigen3-dev
+```
 
-- **PAPI** (required for cache profiling):
-  ```bash
-  bash scripts/install_papi.sh
-  ```
+**Build and install LASlib:**
+```bash
+bash scripts/install_laslib.sh
+```
 
-- **PCL** (optional, for PCL benchmark comparisons):
-  ```bash
-  bash scripts/install_pcl.sh
-  ```
-  If PCL is not found during compilation, the code will compile successfully but without PCL Octree and KD-Tree benchmark support.
+### Building the Library
 
-- **Picotree** (optional, for Picotree benchmark comparisons):
-  ```bash
-  bash scripts/install_picotree.sh
-  ```
+#### Standard Build (CPU only)
 
-### Compilation
-
-#### Standard CPU Build (without CUDA)
-
-In the project directory, just execute:
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=Release .
-cmake --build build
+cmake --build build --parallel $(nproc)
 ```
 
-This creates the executable at `build/octrees-benchmark`.
+This produces:
+- **Static library:** `build/liboctrees-benchmark_static.a`
+- **Shared library:** `build/liboctrees-benchmark_shared.so`
 
-#### CUDA GPU Acceleration Build
+#### With CUDA Support
 
-##### Prerequisites
+Requires CUDA 12.5+ and a compatible compiler:
 
-This project requires CUDA 12.5+ and a compatible C++ compiler. The recommended approach is using **conda/micromamba** to manage the build environment.
-
-**Step 1:** Create a conda environment with CUDA and dependencies
 ```bash
-# Using conda
+# Create conda environment with CUDA
 conda create -n cuda-build -c conda-forge gcc=12 gxx=12 cmake ninja cuda-toolkit=12.5 -y
 conda activate cuda-build
-```
 
-**Step 2:** Build with CUDA support
-```bash
+# Build
 cmake -B build -DCMAKE_BUILD_TYPE=Release -DWITH_CUDA=ON .
-cmake --build build
+cmake --build build --parallel $(nproc)
 ```
 
-This creates the executable at `build/octrees-benchmark`.
+#### Installing the Library
 
-### Execution
-We provide scripts for replicating our results, check `bench_neighbors.bash` for kNN and fixed-radius neighbor searches, `bench_memory.bash` for the measurements of Octree and KD-tree sizes, and `bench_locality.bash` for benchmarks analyzing how SFCs improve locality.
-
-Under the folder `plots` we include all the python scripts for generating the figures seen in the publication.
-
-### Tests / Examples
-
-A small usage example of the library features is provided under `examples/example.cpp`. It is automatically built alongside the main project.
+To install the library to a local directory:
 
 ```bash
-make test_library
-./tests/test_library
+cmake --install build --prefix ./install
 ```
 
-#### Running the full test suite
-
-The project includes a comprehensive unit testing suite using GoogleTest. Build the project with option -DBUILD_TESTS=ON to enable it. After building the project, you can run all tests with:
+Or to the system:
 
 ```bash
-make                # builds the library and all test executables
-ctest --output-on-failure
+sudo cmake --install build
 ```
 
-You can also run individual test executables directly, e.g.:
+### Tests
+
+The library includes comprehensive unit tests using GoogleTest (automatically fetched during build):
+
+**Build everything including tests:**
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release .
+cmake --build build --parallel $(nproc)
+```
+
+**Run all tests:**
+```bash
+ctest --test-dir build --output-on-failure
+```
+
+**Run specific test:**
+```bash
+ctest --test-dir build -R LinearOctreeTest.RadiusSearch --output-on-failure
+```
+
+### Examples
+
+A basic usage example is provided in `examples/example.cpp`. It is automatically compiled alongside the library:
 
 ```bash
-./tests/test_points
-./tests/test_encoders
-./tests/test_octree
-./tests/test_octree_advanced
+# Run the example
+./build/examples/example
 ```
 
-To run a specific test case with CTest, use the `-R` option with the test name, for example:
-
-```bash
-ctest -R LinearOctreeTest.RadiusSearch
-```
-
-
-## Main Options
-
-| Option | Alias | Description |
-| :--- | :--- | :--- |
-| `-h` | `--help` | Show help message. |
-| `-i` | `--input` | Path to input file. |
-| `-c` | `--container-type` | Container type to use. Default: `AoS`. <br> Possible values: `SoA`, `AoS`. |
-| `-o` | `--output` | Path to output file. |
-| `-r` | `--radii` | Benchmark radii (comma-separated, e.g., `2.5,5.0,7.5`). |
-| `-v` | `--kvalues` | kNN benchmark k's (comma-separated, e.g., `10,50,250,1000`). |
-| `-s` | `--searches` | Number of searches (random centers, unless `--sequential` is set), type `all` to search over the whole cloud (with sequential indexing). |
-| `-t` | `--repeats` | Number of repeats to do for each benchmark. |
-| `-k` | `--kernels` | Specify which kernels to use (comma-separated or `all`). Possible values: `sphere`, `cube`, `square`, `circle`. |
-| `-a` | `--search-algo` | Specify which search algorithms to run (comma-separated or `all`). Default: `neighborsPtr,neighbors,neighborsPrune,neighborsStruct`. <br> Possible values: <br> **Radius Search:** <br> &nbsp;&nbsp;&bull; `neighborsPtr` – basic search on pointer-based octree <br> &nbsp;&nbsp;&bull; `neighbors` – basic search on linear octree <br> &nbsp;&nbsp;&bull; `neighborsPrune` – optimized linear octree search with octant pruning <br> &nbsp;&nbsp;&bull; `neighborsStruct` – optimized linear search using index ranges <br> &nbsp;&nbsp;&bull; `neighborsApprox` – approximate search (upper/lower bounds), requires `--approx-tol` <br> &nbsp;&nbsp;&bull; `neighborsUnibn` – unibnOctree search <br> &nbsp;&nbsp;&bull; `neighborsPCLKD` – PCL KD-tree search (if available) <br> &nbsp;&nbsp;&bull; `neighborsPCLOct` – PCL Octree search (if available) <br> &nbsp;&nbsp;&bull; `neighborsPico` – PicoTree search <br> **KNN Search:** <br> &nbsp;&nbsp;&bull; `KNNV2` – linear octree KNN searches <br> &nbsp;&nbsp;&bull; `KNNNanoflann` – nanoflann KNN searches <br> &nbsp;&nbsp;&bull; `KNNPCLKD` – PCL KD-tree KNN search (if available) <br> &nbsp;&nbsp;&bull; `KNNPCLOCT` – PCL Octree KNN search (if available) <br> &nbsp;&nbsp;&bull; `KNNPico` – PicoTree KNN search |
-| `-e` | `--encodings` | Select SFC encodings to reorder the cloud before the searches (comma-separated or `all`). Default: `all`. <br> Possible values: <br> &nbsp;&nbsp;&bull; `none` – no encoding, Linear Octree won't be built with it <br> &nbsp;&nbsp;&bull; `mort` – Morton SFC Reordering <br> &nbsp;&nbsp;&bull; `hilb` – Hilbert SFC Reordering |
-| – | `--debug` | Enable debug mode (measures octree build and encoding times). |
-| – | `--build-enc` | Run benchmarks for the encoding and build of selected structures (the ones with a representative on `-a` / `--search-algo`). |
-| – | `--memory` | Run a simple benchmark for measuring the memory consumed by a structure for heap profiling. <br> Possible values: `ptrOct`, `linOct`, `unibnOct`, `nanoKD`, `pclOct`, `pclKD`, `picoTree`. |
-| – | `--locality` | Run benchmarks for analyzing the locality of the point cloud after given reorderings. |
-| – | `--cache-profiling` | Enable cache profiling during search algo executions using PAPI. |
-| – | `--check` | Enable result checking (legacy option; use `avg_result_size` to verify correctness). |
-| – | `--no-warmup` | Disable warmup phase. |
-| – | `--approx-tol` | Tolerance values for approximate search (comma-separated e.g., `10.0,50.0,100.0`). |
-| – | `--num-threads` | List of thread counts for scalability test (comma-separated e.g., `1,2,4,8,16,32`). If not specified, OpenMP defaults to maximum threads and no scalability test is run. |
-| – | `--sequential` | Make the search set sequential instead of random (usually faster). Automatically set when `-s all` is used. |
-| – | `--max-leaf` | Max number of points per octree leaf (default = 128). Does not apply to PCL Octree. |
-| – | `--pcl-oct-resolution`| Min octant size for subdivision in PCL Octree. |
+This demonstrates:
+- Loading a point cloud from file
+- Creating a linear octree
+- Performing radius and KNN searches
 
 ## Authorship
 Grupo de Arquitectura de Computadores (GAC)  
