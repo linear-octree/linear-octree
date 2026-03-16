@@ -45,8 +45,22 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/.local" CACHE PATH "Installation prefix" FORCE)
 endif()
 
-# Install libraries
+# Include CMakePackageConfigHelpers for configuration file generation
+include(CMakePackageConfigHelpers)
+
+# Define standard install directories
+set(CMAKE_INSTALL_INCLUDEDIR "include" CACHE PATH "Include directory")
+set(CMAKE_INSTALL_LIBDIR "lib" CACHE PATH "Library directory")
+
+# Configure targets export file
+export(TARGETS ${PROJECT_NAME}_static ${PROJECT_NAME}_shared
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+)
+
+# Install libraries with export
 install(TARGETS ${PROJECT_NAME}_static ${PROJECT_NAME}_shared
+    EXPORT linoctreeTargets
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
@@ -59,12 +73,6 @@ install(DIRECTORY inc/
 )
 
 # Generate and install CMake config file for find_package()
-include(CMakePackageConfigHelpers)
-
-# Define standard install directories
-set(CMAKE_INSTALL_INCLUDEDIR "include" CACHE PATH "Include directory")
-set(CMAKE_INSTALL_LIBDIR "lib" CACHE PATH "Library directory")
-
 configure_package_config_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
@@ -75,3 +83,11 @@ configure_package_config_file(
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     DESTINATION lib/cmake/${PROJECT_NAME}
 )
+
+# Export targets for use by find_package()
+install(EXPORT linoctreeTargets
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION lib/cmake/${PROJECT_NAME}
+)
+

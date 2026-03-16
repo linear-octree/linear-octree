@@ -1,0 +1,26 @@
+@PACKAGE_INIT@
+
+# Linoctree library configuration file
+# This file is used by find_package(linoctree) in dependent projects
+
+# Include guards
+if(linoctree_FOUND)
+    return()
+endif()
+set(linoctree_FOUND TRUE)
+
+# Define the linoctree import targets
+include("${CMAKE_CURRENT_LIST_DIR}/linoctreeTargets.cmake" OPTIONAL)
+
+# Library paths
+set(linoctree_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@/linoctree")
+set(linoctree_LIBRARY_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
+
+# Define libraries
+set(linoctree_LIBRARIES linoctree::linoctree_shared linoctree::linoctree_static)
+
+# Success message
+if(NOT linoctree_FIND_QUIETLY)
+    message(STATUS "Found linoctree in ${CMAKE_CURRENT_LIST_DIR}")
+endif()
+
