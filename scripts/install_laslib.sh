@@ -8,7 +8,7 @@ LIB_PREFIX="$(dirname "$(readlink -f "$0")")/../lib"
 LIB_PREFIX="$(readlink -f "${LIB_PREFIX}")"
 
 # Check if LASlib is already installed
-if [ -f "${LIB_PREFIX}/LASlib/include/laslib.hpp" ]; then
+if [ -f "${LIB_PREFIX}/LASlib/lib/LASlib/libLASlib.a" ]; then
     echo "LASlib already installed, skipping build..."
     exit 0
 fi
