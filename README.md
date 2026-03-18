@@ -1,5 +1,7 @@
 # LinearOctree
 
+[![Build and Test](https://github.com/myermo/linear-octree/actions/workflows/build-and-test.yml/badge.svg?branch=master)](https://github.com/myermo/linear-octree/actions/workflows/build-and-test.yml)
+
 ## Background
 
 LiDAR (Light and Ranging Detection) technology has now become the quintessential technique for collecting geospatial data from the earth's surface. This code implements a linearized octree based on ideas from Keller et al. and Behley et al. for fast fixed-radius neighbourhood searches, achieving better performance than other Octrees and KD-trees tested, such as nanoflann KD-tree, picoTree, PCL Octree and KD-Tree, and unibnOctree. We also analyze the performance of Morton and Hilbert Space Filling Curves (SFCs). SFC Reordering allows for faster searches and is essential for the construction of the linear Octree. Extensive benchmarking and result plotting code and scripts are also provided.
