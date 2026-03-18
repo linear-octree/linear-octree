@@ -19,6 +19,7 @@ This code is associated with a research paper published as a preprint:
 If you use this code in your research, please cite the associated paper using one of the following formats:
 
 **BibTeX:**
+
 ```bibtex
 @article{Viñambres2026,
   title={Efficient Neighbourhood Search in 3D Point Clouds Through Space-Filling Curves and Linear Octrees},
@@ -29,6 +30,7 @@ If you use this code in your research, please cite the associated paper using on
 ```
 
 **APA:**
+
 ```
 Viñambres, P. D., Yermo, M., Alcaraz, S. R., Lorenzo, O. G., Rivera, F. F., & Cabaleiro, J. C. (2026). Efficient neighbourhood search in 3D point clouds through space-filling curves and linear octrees. arXiv Preprint, 2603.06771.
 ```
@@ -43,18 +45,13 @@ The library requires only **3 core dependencies**:
 
 - **CMake** 3.14+
 - **OpenMP** (for parallelization)
-- **Eigen3** (linear algebra)
 - **LASlib** (LAS file I/O)
 
 **Build and install LASlib:**
+
 ```bash
 bash scripts/install_laslib.sh
 ```
-**Build and install Eigen3:**
-```bash 
-bash scripts/install_eigen3.sh
-```
-
 
 ### Building the Library
 
@@ -66,6 +63,7 @@ cmake --build build --parallel $(nproc)
 ```
 
 This produces:
+
 - **Static library:** `build/liboctrees-benchmark_static.a`
 - **Shared library:** `build/liboctrees-benchmark_shared.so`
 
@@ -102,17 +100,20 @@ sudo cmake --install build
 The library includes comprehensive unit tests using GoogleTest (automatically fetched during build):
 
 **Build everything including tests:**
+
 ```bash
-cmake -B build -DCMAKE_BUILD_TYPE=Release .
+cmake -B build -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release .
 cmake --build build --parallel $(nproc)
 ```
 
 **Run all tests:**
+
 ```bash
 ctest --test-dir build --output-on-failure
 ```
 
 **Run specific test:**
+
 ```bash
 ctest --test-dir build -R LinearOctreeTest.RadiusSearch --output-on-failure
 ```
@@ -127,21 +128,26 @@ A basic usage example is provided in `examples/example.cpp`. It is automatically
 ```
 
 This demonstrates:
+
 - Loading a point cloud from file
 - Creating a linear octree
 - Performing radius and KNN searches
 
 ## Authorship
+
 Grupo de Arquitectura de Computadores (GAC)  
 Centro Singular de Investigación en Tecnologías Inteligentes (CiTIUS)  
-Universidad de Santiago de Compostela (USC)  
+Universidad de Santiago de Compostela (USC)
 
 Linear octree implementation, SFCs, benchmarking and plotting code from:
+
 - Pablo Díaz Viñambres ([pablo.diaz.vinambres@rai.usc.es](mailto:pablo.diaz.vinambres@rai.usc.es))
 
 Optimized search algorithm and vectorization of SFC encoders:
+
 - Abel Rodríguez Calleja ([GitHub profile](https://github.com/Abel-Breaker))
 
-Original pointer-based Octree, readers and program structure from: 
+Original pointer-based Octree, readers and program structure from:
+
 - Miguel Yermo García ([miguel.yermo@usc.es](mailto:miguel.yermo@usc.es))
 - Silvia Rodríguez Alcaraz ([silvia.alcaraz@usc.es](mailto:silvia.alcaraz@usc.es))
