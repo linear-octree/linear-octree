@@ -647,6 +647,31 @@ public:
         return (double) points.size() / (box.radii().getX() * box.radii().getY() * box.radii().getZ() * 8.0f);
     }
 
+    /// @brief Returns a const reference to the offsets array (for testing and analysis)
+    const std::vector<uint32_t>& getOffsets() const {
+        return offsets;
+    }
+
+    /// @brief Returns a const reference to the internal ranges array (for testing and analysis)
+    const std::vector<std::pair<size_t, size_t>>& getInternalRanges() const {
+        return internalRanges;
+    }
+
+    /// @brief Returns a const reference to the centers array (for testing and analysis)
+    const std::vector<Point>& getCenters() const {
+        return centers;
+    }
+
+    /// @brief Returns a const reference to the precomputed radii array (for testing and analysis)
+    const std::vector<Vector>& getPrecomputedRadii() const {
+        return precomputedRadii;
+    }
+
+    /// @brief Returns the maximum points per leaf used to build this octree
+    size_t getMaxPointsLeaf() const {
+        return maxPointsLeaf_;
+    }
+
     /**
      * @brief Helper function to traverse the octree in a single pass
      * 
