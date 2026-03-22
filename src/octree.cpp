@@ -4,11 +4,12 @@
 
 
 #include <algorithm>
+#include <cstddef>
 #include <unordered_map>
 
 #include "geometry/box.hpp"
 #include "kernels/kernel_factory.hpp"
-#include "main_options.hpp"
+#include "structures/container_types.hpp"
 #include "structures/octree.hpp"
 
 template class Octree<PointsAoS>;
@@ -35,57 +36,58 @@ Octree<Container>::Octree(Container& container)
 }
 
 template <PointContainer Container>
-Octree<Container>::Octree(Container& container, const Point& center, const Vector& radii)
+Octree<Container>::Octree(Container& container, const Point& center, const Vector& radii, const size_t maxPointsLeaf)
     : container_(container), center_(center), radii_(radii)
 {
     octants_.reserve(OCTANTS_PER_NODE);
 }
 
 template <PointContainer Container>
-Octree<Container>::Octree(Container& container, Point center, Vector radii, std::vector<size_t>& points)
+Octree<Container>::Octree(Container& container, Point center, Vector radii, std::vector<size_t>& points, const size_t maxPointsLeaf)
     : container_(container), center_(center), radii_(radii)
 {
     octants_.reserve(OCTANTS_PER_NODE);
     buildOctree(points);
 }
 
-/// @brief Fill the missing data in the octree log for the Pointer-based Octree 
-template <PointContainer Container>
-void Octree<Container>::logOctreeData(std::shared_ptr<BuildLog> log) const 
-{
-    std::vector<std::pair<std::reference_wrapper<const Octree>, size_t>> toVisit;
-    toVisit.emplace_back(std::cref(*this), 0);
+// TODO: build to benchmark
+// /// @brief Fill the missing data in the octree log for the Pointer-based Octree 
+// template <PointContainer Container>
+// void Octree<Container>::logOctreeData(std::shared_ptr<BuildLog> log) const 
+// {
+//     std::vector<std::pair<std::reference_wrapper<const Octree>, size_t>> toVisit;
+//     toVisit.emplace_back(std::cref(*this), 0);
 
-    while (!toVisit.empty())
-    {
-        auto [octant_ref, depth] = toVisit.back();
-        toVisit.pop_back();
-        const Octree& octant = octant_ref.get();
+//     while (!toVisit.empty())
+//     {
+//         auto [octant_ref, depth] = toVisit.back();
+//         toVisit.pop_back();
+//         const Octree& octant = octant_ref.get();
 
-        // Add size of Octree node itself
-        log->memoryUsed += sizeof(Octree);
+//         // Add size of Octree node itself
+//         log->memoryUsed += sizeof(Octree);
 
-        // For leaf nodes, count memory used by indices
-        if (octant.isLeaf()) {
-            log->leafNodes++;
-            const auto& pointIndices = octant.getPoints();
-            log->memoryUsed += sizeof(size_t) * pointIndices.size();  // each index is a size_t
+//         // For leaf nodes, count memory used by indices
+//         if (octant.isLeaf()) {
+//             log->leafNodes++;
+//             const auto& pointIndices = octant.getPoints();
+//             log->memoryUsed += sizeof(size_t) * pointIndices.size();  // each index is a size_t
 
-            if (depth > log->maxDepthSeen) {
-                log->maxDepthSeen = depth;
-                auto minRadii = octant.getRadii();
-                log->minRadiusAtMaxDepth = std::min({minRadii.getX(), minRadii.getY(), minRadii.getZ()});
-            }
-        } else {
-            log->internalNodes++;
-            for (const auto& child : octant.getOctants()) {
-                toVisit.emplace_back(std::cref(child), depth + 1);
-            }
-        }
-    }
+//             if (depth > log->maxDepthSeen) {
+//                 log->maxDepthSeen = depth;
+//                 auto minRadii = octant.getRadii();
+//                 log->minRadiusAtMaxDepth = std::min({minRadii.getX(), minRadii.getY(), minRadii.getZ()});
+//             }
+//         } else {
+//             log->internalNodes++;
+//             for (const auto& child : octant.getOctants()) {
+//                 toVisit.emplace_back(std::cref(child), depth + 1);
+//             }
+//         }
+//     }
 
-    log->totalNodes = log->leafNodes + log->internalNodes;
-}
+//     log->totalNodes = log->leafNodes + log->internalNodes;
+// }
 
 template <PointContainer Container>
 std::vector<std::pair<Point, size_t>> Octree<Container>::computeNumPoints() const
@@ -224,7 +226,7 @@ void Octree<Container>::insertPoint(size_t pointIndex)
 			points_.emplace_back(pointIndex);
 		} else {
 			const auto maxRadius = std::max({radii_.getX(), radii_.getY(), radii_.getZ()});
-			if (points_.size() >= mainOptions.maxPointsLeaf && maxRadius >= MIN_OCTANT_RADIUS)
+			if (points_.size() >= maxPointsLeaf_ && maxRadius >= MIN_OCTANT_RADIUS)
 			{
 				createOctants();  // Create children
 				fillOctants();    // Move existing points into children
