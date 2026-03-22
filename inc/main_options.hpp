@@ -3,6 +3,7 @@
 #include "encoding/encoding_types.hpp"
 #include "kernels/kernel_types.hpp"
 #include "search_algorithms/search_types.hpp"
+#include "structures/container_types.hpp"
 #include "structures/structure_types.hpp"
 
 #include <filesystem>
@@ -14,21 +15,6 @@
 #include <vector>
 
 namespace fs = std::filesystem;
-
-enum class ContainerType { AoS, SoA };
-
-constexpr std::pair<ContainerType, std::string_view> containerTypeMap[] = {
-    {ContainerType::AoS, "PointsAoS"},
-    {ContainerType::SoA, "PointsSoA"},
-};
-
-constexpr std::string_view containerTypeToString(ContainerType containerType) {
-  for (const auto &[key, val] : containerTypeMap) {
-    if (key == containerType)
-      return val;
-  }
-  return "Unknown";
-}
 
 class main_options {
 public:
