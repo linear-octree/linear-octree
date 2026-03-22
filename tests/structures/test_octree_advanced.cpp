@@ -130,13 +130,6 @@ TEST_F(AdvancedOctreeTest, KernelCubeSearch) {
     EXPECT_DOUBLE_EQ(points[idx[0]].getX(), 1.0);
 }
 
-// ============================================================================
-// Tests for verifying maxPointsLeaf condition is always met
-// ============================================================================
-
-// ============================================================================
-// Tests for verifying maxPointsLeaf condition and octree construction
-// ============================================================================
 
 /**
  * @brief Helper function to verify lease integrity and gather statistics
