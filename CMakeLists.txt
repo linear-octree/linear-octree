@@ -10,7 +10,7 @@ if(WITH_CUDA)
     include(cmake/CMakeConfigCUDA.cmake)
     message("CUDA configured!\n")
 else()
-    message("CUDA support disabled (use -DWITH_CUDA=ON to enable)")
+    message(WARNING "CUDA support disabled (use -DWITH_CUDA=ON to enable)")
     set(HAVE_CUDA OFF)
 endif()
 
@@ -42,7 +42,7 @@ if(BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 else()  
-    message("Unit tests disabled (use -DBUILD_TESTS=ON to enable)")
+    message(WARNING "Unit tests disabled (use -DBUILD_TESTS=ON to enable)")
 endif()
 
 # Examples
