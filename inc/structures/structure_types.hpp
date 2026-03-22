@@ -20,12 +20,12 @@ constexpr std::pair<SearchStructure, std::string_view> structureMap[] = {
     {SearchStructure::PCL_OCTREE, "pclOct"},
     {SearchStructure::PCL_KDTREE, "pclKD"},
     {SearchStructure::NANOFLANN_KDTREE, "nanoKD"},
-    {SearchStructure::PICOTREE, "picoTree"}
-  };
+    {SearchStructure::PICOTREE, "picoTree"}};
 
-  constexpr std::string_view searchStructureToString(SearchStructure structure) {
-    for (const auto& [key, val] : structureMap) {
-        if (key == structure) return val;
-    }
-    return "Unknown";
+constexpr std::string_view searchStructureToString(SearchStructure structure) {
+  for (const auto &[key, val] : structureMap) {
+    if (key == structure)
+      return val;
+  }
+  return "Unknown";
 }
