@@ -2,6 +2,7 @@
 
 #include "kernels/kernel_types.hpp"
 #include "encoding/encoding_types.hpp"
+#include "structures/structure_types.hpp"
 
 #include <filesystem>
 #include <getopt.h>
@@ -13,21 +14,6 @@
 
 namespace fs = std::filesystem;
 
-enum SearchStructure { 
-	PTR_OCTREE, LINEAR_OCTREE, UNIBN_OCTREE, 
-	PCL_OCTREE, PCL_KDTREE, NANOFLANN_KDTREE,
-	PICOTREE
-};
-
-constexpr std::pair<SearchStructure, std::string_view> structureMap[] = {
-    { SearchStructure::PTR_OCTREE,       "ptrOct" },
-    { SearchStructure::LINEAR_OCTREE,    "linOct" },
-    { SearchStructure::UNIBN_OCTREE,     "uniOct" },
-    { SearchStructure::PCL_OCTREE,       "pclOct" },
-    { SearchStructure::PCL_KDTREE,       "pclKD" },
-    { SearchStructure::NANOFLANN_KDTREE, "nanoKD" },
-    { SearchStructure::PICOTREE, 		 "picoTree" }
-};
 
 enum SearchAlgo { 
 	NEIGHBORS_PTR, NEIGHBORS, NEIGHBORS_PRUNE,
@@ -90,13 +76,6 @@ constexpr SearchStructure algoToStructure(SearchAlgo algo) {
         if (key == algo) return val;
     }
     return SearchStructure::PTR_OCTREE; // Default fallback
-}
-
-constexpr std::string_view searchStructureToString(SearchStructure structure) {
-    for (const auto& [key, val] : structureMap) {
-        if (key == structure) return val;
-    }
-    return "Unknown";
 }
 
 constexpr std::string_view searchAlgoToString(SearchAlgo algo) {
