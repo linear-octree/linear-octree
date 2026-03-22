@@ -6,6 +6,7 @@
 
 #include "encoding/point_encoder_factory.hpp"
 #include "kernels/kernel_factory.hpp"
+#include "kernels/kernel_types.hpp"
 #include "main_options.hpp"
 
 main_options mainOptions{};

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "kernels/kernel_types.hpp"
+
 #include <filesystem>
 #include <getopt.h>
 #include <iostream>
@@ -94,21 +96,6 @@ constexpr std::pair<EncoderType, std::string_view> encoderTypeMap[] = {
     { EncoderType::HILBERT_ENCODER_2D_Z,   	"hilb_2d_z" },
 };
 
-enum class Kernel_t
-{
-	circle,
-	sphere,
-	square,
-	cube
-};
-
-constexpr std::pair<Kernel_t, std::string_view> kernelMap[] = {
-	{Kernel_t::sphere, "sphere"},
-	{Kernel_t::circle, "circle"},
-	{Kernel_t::cube, "cube"},
-	{Kernel_t::square, "square"}
-};
-
 enum class ContainerType {
 	AoS,
 	SoA
@@ -143,13 +130,6 @@ constexpr std::string_view searchAlgoToString(SearchAlgo algo) {
 constexpr std::string_view encoderTypeToString(EncoderType enc) {
     for (const auto& [key, val] : encoderTypeMap) {
         if (key == enc) return val;
-    }
-    return "Unknown";
-}
-
-constexpr std::string_view kernelToString(Kernel_t kernel) {
-    for (const auto& [key, val] : kernelMap) {
-        if (key == kernel) return val;
     }
     return "Unknown";
 }
