@@ -31,6 +31,7 @@ class Octree
 	Point                 center_{};
 	std::vector<size_t> points_{};
 	Vector   radii_{};
+	size_t  maxPointsLeaf_ = 128;
 
 	public:
 	Octree() = delete;
@@ -40,8 +41,8 @@ class Octree
 	explicit Octree(Container& container);
 
 	// leaf constructors
-	Octree(Container& container, const Point& center, const Vector& radii);
-	Octree(Container& container, Point center, Vector radii, std::vector<size_t>& points);
+	Octree(Container& container, const Point& center, const Vector& radii, const size_t maxPointsLeaf = 128);
+	Octree(Container& container, Point center, Vector radii, std::vector<size_t>& points, const size_t maxPointsLeaf = 128);
 
 	[[nodiscard]] inline const std::vector<Octree>& getOctants() const { return octants_; }
 

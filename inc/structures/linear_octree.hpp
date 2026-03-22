@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <optional>
 #include <bitset>
 #include <fstream>
@@ -105,6 +106,9 @@ protected:
     /// @brief The maximum depth seen in the octree
     uint32_t maxDepthSeen = 0;
 
+    /// @brief The maximum number of points that a leaf can have before being subdivided, this is the main parameter that controls the shape of the octree
+    size_t maxPointsLeaf_{};
+
     /**
      * The next 4 arrays contain the important information for neighbor searches
      */
@@ -163,7 +167,7 @@ protected:
      * 
      * @details The following values can be returned:
      * - 1 if the leaf should remain unchanged
-     * - 0 if the leaf should be merged (only if the counts of all of its siblings are <= mainOptions.maxPointsLeaf), the siblins
+     * - 0 if the leaf should be merged (only if the counts of all of its siblings are <= maxPointsLeaf_), the siblings
      * are all next to each other and the node is not the first sibling 
      * (because the first sibling is the node that will stay after merge)
      * - 8^L where L goes up to 4, if we need to split the node L times (recursively)
@@ -180,13 +184,13 @@ protected:
                                     leaf.counts[parentIndex+2] + leaf.counts[parentIndex+3]+ 
                                     leaf.counts[parentIndex+4] + leaf.counts[parentIndex+5]+
                                     leaf.counts[parentIndex+6] + leaf.counts[parentIndex+7];
-            if(parentCount <= mainOptions.maxPointsLeaf)
+            if(parentCount <= maxPointsLeaf_)
                 return 0; // merge
         }
         
         uint32_t nodeCount = leaf.counts[index];
         // Decide if we split this leaf or not
-        if (nodeCount > mainOptions.maxPointsLeaf && level < enc.maxDepth()) { 
+        if (nodeCount > maxPointsLeaf_ && level < enc.maxDepth()) { 
             maxDepthSeen = std::max(maxDepthSeen, level + 1);
             return 8; 
         }
@@ -617,8 +621,9 @@ public:
                         std::vector<key_t>& codes,
                         Box box,
                         PointEncoder& enc,
+                        const size_t maxPointsLeaf = 128,
                         std::shared_ptr<BuildLog> log = nullptr)
-        : points(points), enc(enc), codes(codes), box(box)  {
+        : points(points), enc(enc), codes(codes), box(box), maxPointsLeaf_(maxPointsLeaf)  {
         static_assert(!std::is_same_v<std::decay_t<PointEncoder>, PointEncoding::NoEncoding>,
             "Encoder cannot be an instance of NoEncoding when using LinearOctree.");
         buildOctree(log);

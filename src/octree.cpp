@@ -4,6 +4,7 @@
 
 
 #include <algorithm>
+#include <cstddef>
 #include <unordered_map>
 
 #include "geometry/box.hpp"
@@ -35,14 +36,14 @@ Octree<Container>::Octree(Container& container)
 }
 
 template <PointContainer Container>
-Octree<Container>::Octree(Container& container, const Point& center, const Vector& radii)
+Octree<Container>::Octree(Container& container, const Point& center, const Vector& radii, const size_t maxPointsLeaf)
     : container_(container), center_(center), radii_(radii)
 {
     octants_.reserve(OCTANTS_PER_NODE);
 }
 
 template <PointContainer Container>
-Octree<Container>::Octree(Container& container, Point center, Vector radii, std::vector<size_t>& points)
+Octree<Container>::Octree(Container& container, Point center, Vector radii, std::vector<size_t>& points, const size_t maxPointsLeaf)
     : container_(container), center_(center), radii_(radii)
 {
     octants_.reserve(OCTANTS_PER_NODE);
