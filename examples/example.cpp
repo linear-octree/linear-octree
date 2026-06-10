@@ -8,6 +8,7 @@
 #include "geometry/point_metadata.hpp"
 #include "encoding/morton_encoder_3d.hpp"
 #include "structures/linear_octree.hpp"
+#include "diagnostics/locality_metrics.hpp"
 
 int main() {
     std::cout << "--- Octrees Benchmark Library Test ---" << std::endl;
@@ -47,10 +48,17 @@ int main() {
     octree.knn(searchPoint, k, indexes, distances);
     
     for (size_t i = 0; i < k; ++i) {
-        std::cout << "  Neighbor " << i + 1 << " - Index: " << indexes[i] 
+        std::cout << "  Neighbor " << i + 1 << " - Index: " << indexes[i]
                   << " Distance: " << distances[i] << std::endl;
     }
-    
+
+    // Run the G1 locality diagnostic on the built (and reordered) octree
+    std::cout << "Computing G1 locality diagnostic..." << std::endl;
+    LocalityMetrics locality = LocalityDiagnostics::computeLocalityG1(octree, points, /*k=*/2);
+    std::cout << "  G1 = " << locality.g1
+              << ", mean index dist = " << locality.meanIndexDist
+              << ", samples = " << locality.nSamples << std::endl;
+
     std::cout << "Test completed successfully." << std::endl;
     return 0;
 }

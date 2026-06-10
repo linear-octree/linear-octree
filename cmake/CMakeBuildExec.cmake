@@ -8,16 +8,6 @@ macro(link_core_dependencies target_name)
     endif ()
 
     target_link_libraries(${target_name} PUBLIC ${LASLIB_LIBRARIES})
-    
-    # CUDA (only if CUDA is enabled)
-    if(WITH_CUDA)
-        target_compile_definitions(${target_name} PUBLIC HAVE_CUDA_RUNTIME=1 __CUDA_RUNTIME__)
-        
-        # Link CUDA runtime if available
-        if(CUDAToolkit_FOUND)
-            target_link_libraries(${target_name} PUBLIC CUDA::cudart)
-        endif()
-    endif()
 endmacro()
 
 # Compile sources once using Object Library to avoid duplication

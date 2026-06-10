@@ -1,19 +1,6 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 project(linoctree LANGUAGES C CXX)
 
-# CUDA support option
-option(WITH_CUDA "Enable CUDA support" OFF)
-
-# Configure CUDA toolkit
-if(WITH_CUDA)
-    message("Configuring CUDA ...")
-    include(cmake/CMakeConfigCUDA.cmake)
-    message("CUDA configured!\n")
-else()
-    message(WARNING "CUDA support disabled (use -DWITH_CUDA=ON to enable)")
-    set(HAVE_CUDA OFF)
-endif()
-
 # Configure CMake
 message("Configuring CMake ...")
 include(cmake/CMakeConfig.cmake)

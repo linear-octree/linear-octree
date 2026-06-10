@@ -57,8 +57,6 @@ bash scripts/install_laslib.sh
 
 ### Building the Library
 
-#### Standard Build (CPU only)
-
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=Release .
 cmake --build build --parallel $(nproc)
@@ -69,19 +67,6 @@ This produces:
 - **Static library:** `build/liboctrees-benchmark_static.a`
 - **Shared library:** `build/liboctrees-benchmark_shared.so`
 
-#### With CUDA Support
-
-Requires CUDA 12.5+ and a compatible compiler:
-
-```bash
-# Create conda environment with CUDA
-conda create -n cuda-build -c conda-forge gcc=12 gxx=12 cmake ninja cuda-toolkit=12.5 -y
-conda activate cuda-build
-
-# Build
-cmake -B build -DCMAKE_BUILD_TYPE=Release -DWITH_CUDA=ON .
-cmake --build build --parallel $(nproc)
-```
 
 #### Installing the Library
 
@@ -143,7 +128,7 @@ Universidad de Santiago de Compostela (USC)
 
 Linear octree implementation, SFCs, benchmarking and plotting code from:
 
-- Pablo Díaz Viñambres ([pablo.diaz.vinambres@rai.usc.es](mailto:pablo.diaz.vinambres@rai.usc.es))
+- Pablo Díaz Viñambres ([pablo.diaz@tum.de](mailto:pablo.diaz@tum.de))
 
 Optimized search algorithm and vectorization of SFC encoders:
 
