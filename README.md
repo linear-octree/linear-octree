@@ -1,24 +1,27 @@
-# LinearOctree
+# linear-octree
 
-[![Build and Test](https://github.com/myermo/linear-octree/actions/workflows/build-and-test.yml/badge.svg?branch=master)](https://github.com/myermo/linear-octree/actions/workflows/build-and-test.yml)
+[![Build and Test](https://github.com/linear-octree/linear-octree/actions/workflows/build-and-test.yml/badge.svg?branch=master)](https://github.com/linear-octree/linear-octree/actions/workflows/build-and-test.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![C++](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://isocpp.org/) [![arXiv](https://img.shields.io/badge/arXiv-2603.06771-b31b1b.svg)](https://arxiv.org/abs/2603.06771)
 
-## Background
+This repository contains the code of **linear-octree**, a C++ library for efficient neighbourhood searching in 3D point clouds, combining Space-Filling Curves (SFC) with a linear Octree structure.
 
-LiDAR (Light and Ranging Detection) technology has now become the quintessential technique for collecting geospatial data from the earth's surface. This code implements a linearized octree based on ideas from Keller et al. and Behley et al. for fast fixed-radius neighbourhood searches, achieving better performance than other Octrees and KD-trees tested, such as nanoflann KD-tree, picoTree, PCL Octree and KD-Tree, and unibnOctree. We also analyze the performance of Morton and Hilbert Space Filling Curves (SFCs). SFC Reordering allows for faster searches and is essential for the construction of the linear Octree. Extensive benchmarking and result plotting code and scripts are also provided.
+## 📖 Background
 
-## Publication
+LiDAR (Light Detection and Ranging) technology has now become the quintessential technique for collecting precise geospatial data from the Earth's surface. 
+This library implements a linearized Octree based on ideas from [Keller et al. (2023)](https://doi.org/10.1145/3592979.3593417) and [Behley et al. (2015)](https://doi.org/10.1109/ICRA.2015.7139702) for fast fixed-radius and kNN neighbourhood searches. 
+Our implementation achieves better performance than other well-known solutions, including nanoflann KD-tree, picoTree, PCL Octree and KD-Tree, and unibnOctree.
+
+We also analyse the performance of Morton and Hilbert Space-Filling Curves (SFCs), finding that their reordering enables faster searches and is essential for constructing the linear Octree.
+Extensive benchmarking and result plotting scripts are available on [![GitHub](https://img.shields.io/badge/GitHub-linoctree--benchmark-181717?logo=github)](https://github.com/linear-octree/linoctree-benchmark)
+
+## 📄 Citation
 
 This code is associated with a research paper published as a preprint:
 
-**Efficient Neighbourhood Search in 3D Point Clouds Through Space-Filling Curves and Linear Octrees**
+- **Title:**  Efficient Neighbourhood Search in 3D Point Clouds Through Space-Filling Curves and Linear Octrees
+- **Authors:** Pablo D. Viñambres, Miguel Yermo, Silvia R. Alcaraz, Oscar G. Lorenzo, Francisco F. Rivera, José C. Cabaleiro
+- **arXiv Preprint:** https://arxiv.org/abs/2603.06771 ([PDF](https://arxiv.org/pdf/2603.06771))
 
-**Authors:** Pablo D. Viñambres, Miguel Yermo, Silvia R. Alcaraz, Oscar G. Lorenzo, Francisco F. Rivera, José C. Cabaleiro
-
-**arXiv Preprint:** https://arxiv.org/abs/2603.06771 ([PDF](https://arxiv.org/pdf/2603.06771))
-
-### Citation
-
-If you use this code in your research, please cite the associated paper using one of the following formats:
+If you use this library in your research, please cite our work using one of the following formats:
 
 **BibTeX:**
 
@@ -39,7 +42,7 @@ Viñambres, P. D., Yermo, M., Alcaraz, S. R., Lorenzo, O. G., Rivera, F. F., & C
 
 **DOI:** https://doi.org/10.48550/arXiv.2603.06771
 
-## Installation
+## 🔧 Installation
 
 ### Core Dependencies (Required)
 
@@ -82,7 +85,7 @@ Or to the system:
 sudo cmake --install build
 ```
 
-### Tests
+## 🧪 Tests
 
 The library includes comprehensive unit tests using GoogleTest (automatically fetched during build):
 
@@ -120,12 +123,13 @@ This demonstrates:
 - Creating a linear octree
 - Performing radius and KNN searches
 
-## Authorship
+## 👥 Authorship
 
 Grupo de Arquitectura de Computadores (GAC)  
-Centro Singular de Investigación en Tecnologías Inteligentes (CiTIUS)  
+[Centro Singular de Investigación en Tecnologías Inteligentes (CiTIUS)](https://citius.gal)  
 Universidad de Santiago de Compostela (USC)
 
+<!--
 Linear octree implementation, SFCs, benchmarking and plotting code from:
 
 - Pablo Díaz Viñambres ([pablo.diaz@tum.de](mailto:pablo.diaz@tum.de))
@@ -138,3 +142,16 @@ Original pointer-based Octree, readers and program structure from:
 
 - Miguel Yermo García ([miguel.yermo@usc.es](mailto:miguel.yermo@usc.es))
 - Silvia Rodríguez Alcaraz ([silvia.alcaraz@usc.es](mailto:silvia.alcaraz@usc.es))
+-->
+| Author | Contribution | Contact |
+|---|---|---|
+| (*) Pablo Díaz Viñambres  | Linear Octree implementation, SFCs, benchmarking and plotting code | ✉️ [devderivadas@gmail.com](mailto:devderivadas@gmail.com) |
+| Abel Rodríguez Calleja  | Optimized search algorithm and vectorization of SFC encoders | [Github Profile](https://github.com/Abel-Breaker) |
+| Miguel Yermo  | Original pointer-based Octree, readers and program structure | ✉️ [miguel.yermo@usc.es](mailto:miguel.yermo@usc.es) |
+| Silvia R. Alcaraz  | Original pointer-based Octree, readers and program structure | ✉️ [silvia.alcaraz@inf.ethz.ch](mailto:silvia.alcaraz@inf.ethz.ch) |
+
+(*) Main author/contributor.
+
+## 📃 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
