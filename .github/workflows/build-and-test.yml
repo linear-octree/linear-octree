@@ -10,7 +10,7 @@ jobs:
   build-and-test:
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04, ubuntu-24.10]
+        os: [ubuntu-22.04, ubuntu-24.04]
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -28,9 +28,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: lib
-          key: ${{ runner.os }}-lib-${{ hashFiles('scripts/install_laslib.sh') }}
+          key: ${{ matrix.os }}-lib-${{ hashFiles('scripts/install_laslib.sh') }}
           restore-keys: |
-            ${{ runner.os }}-lib-
+            ${{ matrix.os }}-lib-
 
       - name: Create lib directory
         run: mkdir -p lib
@@ -42,9 +42,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: build
-          key: ${{ runner.os }}-cmake-${{ hashFiles('CMakeLists.txt', 'cmake/**') }}
+          key: ${{ matrix.os }}-cmake-${{ hashFiles('CMakeLists.txt', 'cmake/**') }}
           restore-keys: |
-            ${{ runner.os }}-cmake-
+            ${{ matrix.os }}-cmake-
 
       - name: Configure CMake
         run: |
