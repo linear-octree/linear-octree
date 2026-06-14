@@ -1,13 +1,14 @@
 # linear-octree
 
-[![Build and Test](https://github.com/linear-octree/linear-octree/actions/workflows/build-and-test.yml/badge.svg?branch=master)](https://github.com/linear-octree/linear-octree/actions/workflows/build-and-test.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![C++](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://isocpp.org/) [![arXiv](https://img.shields.io/badge/arXiv-2603.06771-b31b1b.svg)](https://arxiv.org/abs/2603.06771)
+[![Build and Test](https://github.com/linear-octree/linear-octree/actions/workflows/build-and-test.yml/badge.svg?branch=master)](https://github.com/linear-octree/linear-octree/actions/workflows/build-and-test.yml)
 
 This repository contains the code of **linear-octree**, a C++ library for efficient neighbourhood searching in 3D point clouds, combining Space-Filling Curves (SFC) with a linear Octree structure.
 
 ## 📖 Background
 
 LiDAR (Light Detection and Ranging) technology has now become the quintessential technique for collecting precise geospatial data from the Earth's surface. 
-This library implements a linearized Octree based on ideas from [Keller et al. (2023)](https://doi.org/10.1145/3592979.3593417) and [Behley et al. (2015)](https://doi.org/10.1109/ICRA.2015.7139702) for fast fixed-radius and kNN neighbourhood searches. 
+This library implements a linearized Octree based on ideas from [Keller et al. (2023)](https://doi.org/10.1145/3592979.3593417) and [Behley et al. (2015)](https://doi.org/10.1109/ICRA.2015.7139702) for fast fixed-radius and kNN neighbourhood searches.
+It is based on the original code by Pablo Díaz Viñambres, available at [derivada/octrees-benchmark](https://github.com/derivada/octrees-benchmark). 
 Our implementation achieves better performance than other well-known solutions, including nanoflann KD-tree, picoTree, PCL Octree and KD-Tree, and unibnOctree.
 
 We also analyse the performance of Morton and Hilbert Space-Filling Curves (SFCs), finding that their reordering enables faster searches and is essential for constructing the linear Octree.
